@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Income Bot - জয়েন করুন</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; text-align: center; }
+        .container { max-width: 400px; margin: 50px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .logo { width: 100%; height: auto; border-radius: 8px; margin-bottom: 20px; }
+        h1 { color: #1e3a8a; font-size: 1.5em; margin-bottom: 5px; }
+        .message { font-size: 1.1em; color: #333; margin-bottom: 20px; }
+        .channel-list { list-style: none; padding: 0; margin-bottom: 20px; }
+        .channel-list li { background-color: #e0f2fe; padding: 10px; margin-bottom: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .channel-list a { text-decoration: none; color: #007bff; font-weight: bold; }
+        .button-group button { width: 100%; padding: 12px; font-size: 1.1em; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.3s; margin-top: 10px; }
+        #join-button { background-color: #007bff; color: white; }
+        #join-button:hover { background-color: #0056b3; }
+        #verify-button { background-color: #10b981; color: white; display: none; }
+        #verify-button:hover { background-color: #059669; }
+        #open-button { background-color: #f59e0b; color: white; display: none; }
+        #open-button:hover { background-color: #d97706; }
+        .error-message { color: red; margin-top: 15px; font-weight: bold; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://i.ibb.co.com/1GFmXRgz/1764224618140.png" alt="Earning Photo" class="logo">
+        
+        <h1>💸 Online Income bot এ আপনাকে স্বাগতম 🎉</h1>
+        <p class="message">🎁আমাদের টেলিগ্রাম বট থেকে আয় করতে চাইলে নিচে **Join** বাটনে ক্লিক করে **Join** করুন। ✨**start** বাটন ক্লিক করার সাথে সাথে জয়েনিং বোনাস পেয়ে যাবেন🎁</p>
+
+        <ul class="channel-list">
+            <li>Telegram Channel: <a href="https://t.me/solution_to_money_problem" target="_blank">@solution_to_money_problem</a></li>
+            <li>Payment Channel: <a href="https://t.me/autopaymentproof" target="_blank">@autopaymentproof</a></li>
+            <li>Telegram Channel: <a href="https://t.me/online_income_bot24" target="_blank">@online_income_bot24</a></li>
+            <li>Support Channel: <a href="https://t.me/Help_Line_Online" target="_blank">@Help_Line_Online</a></li>
+        </ul>
+
+        <div class="button-group">
+            <button id="join-button" onclick="startJoining()">Join (স্টার্ট)</button>
+            <button id="verify-button" onclick="verifyJoin()">Verify</button>
+            <button id="open-button" onclick="openHomePage()">Open</button>
+        </div>
+
+        <p id="status-message" class="error-message"></p>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHc2wCCZXSkobP3_BiiImU4PCdJGSoXOY",
+            authDomain: "mythic-code-471708-v5.firebaseapp.com",
+            databaseURL: "https://mythic-code-471708-v5-default-rtdb.firebaseio.com",
+            projectId: "mythic-code-471708-v5",
+            storageBucket: "mythic-code-471708-v5.firebasestorage.app",
+            messagingSenderId: "664163784430",
+            appId: "1:664163784430:web:b3a2039a471e0706c805ff",
+            measurementId: "G-RR9K6QQMRZ"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = app.database();
+
+        // Telebot API - (Note: This token should be used on a secure backend server, not directly on the frontend for security.)
+        const TELEGRAM_BOT_TOKEN = "8177686148:AAGqiugAoK7A9gh5pci62aMc1pYifO8fEKc";
+        
+        // --- Core Functions ---
+
+        // 1. Initial Start (Simulating /start)
+        function startJoining() {
+            document.getElementById('join-button').style.display = 'none';
+            document.getElementById('verify-button').style.display = 'block';
+            document.getElementById('status-message').innerText = 'অনুগ্রহ করে সবগুলো চ্যানেলে জয়েন করে Verify বাটনে ক্লিক করুন।';
+            document.getElementById('status-message').style.display = 'block';
+
+            // IMPORTANT: In a real bot, the 'start' command would be handled by the Telegram Bot server, 
+            // which would then check the user's ID/IP/VPN and log the attempt in Firebase.
+            console.log("Simulating /start command and initial security checks...");
+            // Placeholder for IP/VPN/Model check logic
+            // checkDeviceSecurity(); 
+        }
+
+        // 2. Verify Channel Join
+        function verifyJoin() {
+            document.getElementById('status-message').innerText = 'ভেরিফাই করা হচ্ছে... অপেক্ষা করুন।';
+            document.getElementById('status-message').style.display = 'block';
+            document.getElementById('verify-button').disabled = true;
+
+            // --- Server-side Logic Placeholder ---
+            // The real channel join check MUST be done on your secure server using the Telegram Bot API.
+            // Client-side code CANNOT reliably check if a user has joined a channel.
+
+            // Simulate the backend API call to check memberships
+            const allJoined = simulateChannelCheck(); 
+
+            if (allJoined) {
+                // All checks passed (simulated)
+                document.getElementById('status-message').innerText = '✅ ভেরিফাই সফল! আপনি জয়েনিং বোনাস পেয়েছেন।';
+                document.getElementById('verify-button').style.display = 'none';
+                document.getElementById('open-button').style.display = 'block';
+                // Log user data to Firebase on successful verification (Telegram ID, etc.)
+                // saveUserDataToFirebase(); 
+
+            } else {
+                // Checks failed (simulated)
+                document.getElementById('status-message').innerText = '❌ আপনি সবগুলো channel join হননি। সবগুলোতে জয়েন করে আবার চেষ্টা করুন।';
+                document.getElementById('verify-button').disabled = false; // Re-enable button
+            }
+        }
+
+        // 3. Open Home Page
+        function openHomePage() {
+            // Redirect to the main application page
+            window.location.href = 'home.html'; 
+        }
+
+        // --- Utility Functions (Simulations) ---
+        function simulateChannelCheck() {
+            // In reality, this would be an AJAX call to your server which calls Telegram API getChatMember.
+            // Example: return fetch('/api/check_join?user_id=' + USER_ID).then(res => res.json()).isJoined;
+            // For now, we simulate success after a delay.
+            return Math.random() > 0.1; // 90% chance of success for testing
+        }
+
+        function saveUserDataToFirebase() {
+            // Placeholder for Firebase database write
+            const userId = 'TELEGRAM_USER_ID_HERE'; // Get actual user ID from bot interaction
+            database.ref('users/' + userId).set({
+                username: 'User Name',
+                join_date: new Date().toISOString(),
+                balance: 0.01, // Joining Bonus
+                referral_count: 0
+            }).then(() => {
+                console.log("User data saved with joining bonus.");
+            }).catch((error) => {
+                console.error("Firebase save failed:", error);
+            });
+        }
+    </script>
+</body>
+</html>
