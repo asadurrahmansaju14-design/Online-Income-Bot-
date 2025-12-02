@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Income Bot</title>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src='//libtl.com/sdk.js' data-zone='10242818' data-sdk='show_10242818'></script>
+
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --dark: #121212;
+            --card: #1e1e1e;
+            --text: #ffffff;
+            --danger: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #0f0f0f;
+            position: relative;
+        }
+
+        /* Header Image */
+        .banner-img {
+            width: 100%;
+            height: auto;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Content Padding */
+        .content {
+            padding: 15px;
+        }
+
+        /* Titles & Text */
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-text {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .highlight {
+            color: #f1c40f;
+        }
+
+        /* List Styles */
+        .channel-list {
+            list-style: none;
+            background: var(--card);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .channel-list li {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .channel-list a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-verify {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-open {
+            background: var(--primary);
+            color: white;
+            display: none; /* Hidden initially */
+        }
+
+        .btn-back {
+            background: #555;
+            color: white;
+            margin-top: 10px;
+        }
+
+        /* Verification Steps */
+        .verify-steps {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 15px;
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #333;
+        }
+
+        .verify-steps li {
+            margin-bottom: 5px;
+            list-style: none;
+        }
+
+        .check-icon { color: var(--primary); margin-right: 5px; }
+        .cross-icon { color: var(--danger); margin-right: 5px; }
+
+        /* --- Home Page Styles --- */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .menu-item {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 1px solid #333;
+        }
+
+        .menu-item:active {
+            transform: scale(0.95);
+        }
+
+        .menu-item i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .menu-item h3 {
+            font-size: 16px;
+            margin: 0;
+        }
+
+        /* --- Modals / Sections --- */
+        .section-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 100;
+            overflow-y: auto;
+            display: none;
+            padding: 15px;
+        }
+
+        .section-view.active {
+            display: block;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .balance-box {
+            text-align: center;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .ad-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .ad-panel {
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Input Fields */
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background: #222;
+            color: white;
+        }
+
+        /* History Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: center;
+        }
+        th { background: #222; }
+
+        .status-pending { color: #f39c12; }
+        .status-completed { color: #2ecc71; }
+
+        /* Loader */
+        #loader {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p id="loader-text">Checking...</p>
+    </div>
+
+    <div class="container">
+        
+        <div id="start-page">
+            <img src="https://i.ibb.co.com/1GFmXRgz/1764224618140.png" alt="Start Banner" class="banner-img">
+            
+            <div class="content">
+                <div class="welcome-text">
+                    💸 Online Income Bot এ আপনাকে স্বাগতম 🎉<br>
+                    ✨ ২৪ ঘণ্টা ইনকাম করুন — শুধু join করুন + কাজ করুন
+                </div>
+
+                <div style="background: #252525; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 13px;">
+                    💰 Daily 200 Ads = Real Earnings<br>
+                    🎁 Start ক্লিক করলেই Bonus পাবেন
+                </div>
+
+                <h3>Must Join Channels ⬇️</h3>
+                <ul class="channel-list">
+                    <li><a href="https://t.me/solution_to_money_problem" target="_blank"><i class="fab fa-telegram"></i> @solution_to_money_problem</a></li>
+                    <li><a href="https://t.me/autopaymentproof" target="_blank"><i class="fab fa-telegram"></i> @autopaymentproof</a></li>
+                    <li><a href="https://t.me/online_income_bot24" target="_blank"><i class="fab fa-telegram"></i> @online_income_bot24</a></li>
+                    <li><a href="https://t.me/Help_Line_Online" target="_blank"><i class="fab fa-telegram"></i> @Help_Line_Online</a></li>
+                </ul>
+
+                <div class="verify-steps">
+                    <b>Verify Rules:</b><br>
+                    <i class="fas fa-mobile-alt check-icon"></i> ১টি ফোন = ১টি অ্যাকাউন্ট<br>
+                    <i class="fas fa-ban cross-icon"></i> ২য়বার অ্যাকাউন্ট করলে Auto বান<br>
+                    <i class="fas fa-shield-alt check-icon"></i> Phone Model & IP Check<br>
+                    <i class="fas fa-globe check-icon"></i> VPN Block
+                </div>
+
+                <button class="btn btn-verify" onclick="verifyUser()">Verify Now</button>
+                <button class="btn btn-open" id="openBtn" onclick="goToHome()">Open Home Page 🚀</button>
+            </div>
+        </div>
+
+        <div id="home-page" style="display: none;">
+            <img src="https://i.ibb.co.com/F4vhpsrS/1764231708480.png" alt="Home Banner" class="banner-img">
+            
+            <div class="content">
+                <h3>Home Page Features</h3>
+                
+                <div class="menu-grid">
+                    <div class="menu-item" onclick="showSection('account')">
+                        <i class="fas fa-user"></i>
+                        <h3>My Account</h3>
+                    </div>
+                    <div class="menu-item" onclick="showSection('balance')">
+                        <i class="fas fa-wallet"></i>
+                        <h3>Balance</h3>
+                    </div>
+                    <div class="menu-item" onclick="showSection('earn')">
+                        <i class="fas fa-mouse"></i>
+                        <h3>Earn</h3>
+                    </div>
+                    <div class="menu-item" onclick="showSection('referral')">
+                        <i class="fas fa-users"></i>
+                        <h3>Referral</h3>
+                    </div>
+                    <div class="menu-item" onclick="showSection('withdraw')">
+                        <i class="fas fa-university"></i>
+                        <h3>Withdraw</h3>
+                    </div>
+                    <div class="menu-item" onclick="window.open('https://t.me/Help_Line_Online', '_blank')">
+                        <i class="fas fa-headset"></i>
+                        <h3>Support</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-account" class="section-view">
+            <h2>👤 My Account</h2>
+            <div class="channel-list" style="margin-top: 20px;">
+                <div class="info-row">
+                    <span>User Name:</span>
+                    <span id="acc-name">Loading...</span>
+                </div>
+                <div class="info-row">
+                    <span>ID No:</span>
+                    <span id="acc-id">...</span>
+                </div>
+                <div class="info-row">
+                    <span>Total Referral:</span>
+                    <span id="acc-ref">0</span>
+                </div>
+                <div class="info-row">
+                    <span>Balance:</span>
+                    <span id="acc-bal">0.0000</span> USDT
+                </div>
+                <div class="info-row">
+                    <span>Wallet:</span>
+                    <span>BEP20 / Bkash / Nagad</span>
+                </div>
+            </div>
+            <button class="btn btn-back" onclick="closeSection()">Back to Home</button>
+        </div>
+
+        <div id="section-balance" class="section-view">
+            <h2>💰 Balance</h2>
+            <div class="balance-box">
+                <h1 id="main-balance-usdt">0.0000 USDT</h1>
+                <p style="color: #ccc;">≈ <span id="main-balance-bdt">0.00</span> BDT</p>
+            </div>
+            <p style="text-align: center; font-size: 14px;">এখানে user সকল কাজের জন্য USDT দেওয়া হয় তা জমা হবে।</p>
+            <button class="btn btn-back" onclick="closeSection()">Back to Home</button>
+        </div>
+
+        <div id="section-earn" class="section-view">
+            <h2>💵 Earn System</h2>
+            <p style="text-align: center; margin-bottom: 15px;">প্রতিদিন ২০০ Ads | ১টি Ad = 0.001 USDT</p>
+            
+            <div class="ad-grid">
+                <div class="ad-panel">
+                    <h3>Panel 1</h3>
+                    <p>0/50 Ads</p>
+                    <button class="btn btn-verify" onclick="watchAd(1)">Watch Ad</button>
+                </div>
+                <div class="ad-panel">
+                    <h3>Panel 2</h3>
+                    <p>0/50 Ads</p>
+                    <button class="btn btn-verify" onclick="watchAd(2)">Watch Ad</button>
+                </div>
+                <div class="ad-panel">
+                    <h3>Panel 3</h3>
+                    <p>0/50 Ads</p>
+                    <button class="btn btn-verify" onclick="watchAd(3)">Watch Ad</button>
+                </div>
+                <div class="ad-panel">
+                    <h3>Panel 4</h3>
+                    <p>0/50 Ads</p>
+                    <button class="btn btn-verify" onclick="watchAd(4)">Watch Ad</button>
+                </div>
+            </div>
+            <p style="font-size: 12px; color: yellow; margin-top: 10px;">✔ Ad পুরা দেখলে Verify Button আসবে<br>✔ মাঝপথে বের হলে Payment হবে না</p>
+            <button class="btn btn-back" onclick="closeSection()">Back to Home</button>
+        </div>
+
+        <div id="section-referral" class="section-view">
+            <h2>🎁 Referral</h2>
+            <div class="welcome-text">
+                আপনার রেফার লিংকটি শেয়ার করুন এবং আপনার বন্ধুদের আমন্ত্রণ করুন। আপনার বন্ধু সাইন আপ করলে আপনি বোনাস পাবেন।
+            </div>
+            <div class="channel-list">
+                <p>🎁 প্রতি রেফারে → <span class="highlight">0.015 USDT Bonus</span></p>
+                <br>
+                <p>Your Link:</p>
+                <input type="text" id="ref-link" value="Loading..." style="width:100%; padding:5px; background:#333; color:#fff; border:none;" readonly>
+                <button class="btn btn-verify" onclick="copyRef()" style="margin-top: 5px;">Copy Link</button>
+            </div>
+            <button class="btn btn-back" onclick="closeSection()">Back to Home</button>
+        </div>
+
+        <div id="section-withdraw" class="section-view">
+            <h2>🏧 Withdraw</h2>
+            
+            <div class="input-group">
+                <label>Select Method</label>
+                <select id="withdraw-method">
+                    <option value="USDT">USDT (BEP20)</option>
+                    <option value="Bkash">Bkash</option>
+                    <option value="Nagad">Nagad</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Wallet/Number</label>
+                <input type="text" id="withdraw-wallet" placeholder="Enter Wallet or Number">
+            </div>
+            <div class="input-group">
+                <label>Amount (USDT)</label>
+                <input type="number" id="withdraw-amount" placeholder="Min 0.2">
+            </div>
+
+            <div style="font-size: 12px; margin-bottom: 10px;">
+                ✔ Minimum Withdraw: 0.2 USDT / 20 BDT<br>
+                ✔ Withdraw post will be auto sent to @autopaymentproof
+            </div>
+
+            <button class="btn btn-verify" onclick="processWithdraw()">Withdraw Now</button>
+
+            <h3>Withdraw History</h3>
+            <table id="withdraw-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Wallet</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+
+            <button class="btn btn-back" onclick="closeSection()">Back to Home</button>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, set, get, update, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+        // Your Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHc2wCCZXSkobP3_BiiImU4PCdJGSoXOY",
+            authDomain: "mythic-code-471708-v5.firebaseapp.com",
+            databaseURL: "https://mythic-code-471708-v5-default-rtdb.firebaseio.com",
+            projectId: "mythic-code-471708-v5",
+            storageBucket: "mythic-code-471708-v5.firebasestorage.app",
+            messagingSenderId: "664163784430",
+            appId: "1:664163784430:web:b3a2039a471e0706c805ff",
+            measurementId: "G-RR9K6QQMRZ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- GLOBAL VARIABLES ---
+        let userTelegramId = null;
+        let userData = {
+            balance: 0,
+            referrals: 0,
+            adsWatched: 0
+        };
+
+        // --- INIT USER ---
+        // Telegram WebApp থেকে ইউজার আইডি নেওয়ার চেষ্টা
+        const tg = window.Telegram.WebApp;
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            userTelegramId = tg.initDataUnsafe.user.id;
+            document.getElementById('acc-name').innerText = tg.initDataUnsafe.user.first_name;
+        } else {
+            // Testing purpose (If not in telegram)
+            let storedId = localStorage.getItem('site_user_id');
+            if(!storedId) {
+                storedId = 'Guest_' + Math.floor(Math.random() * 100000);
+                localStorage.setItem('site_user_id', storedId);
+            }
+            userTelegramId = storedId;
+            document.getElementById('acc-name').innerText = "Guest User";
+        }
+        
+        document.getElementById('acc-id').innerText = userTelegramId;
+        document.getElementById('ref-link').value = `https://t.me/OnlineIncomeBot?start=${userTelegramId}`;
+
+        // Load User Data from Firebase
+        const userRef = ref(db, 'users/' + userTelegramId);
+        
+        // Listen to balance changes
+        onValue(userRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                userData = data;
+                updateUI();
+            } else {
+                // New User Setup
+                userData = {
+                    balance: 0.00,
+                    referrals: 0,
+                    adsWatched: 0,
+                    joined: false
+                };
+                set(userRef, userData);
+                updateUI();
+            }
+        });
+
+        // --- UI FUNCTIONS ---
+
+        // 1. Verify Logic
+        window.verifyUser = function() {
+            const loader = document.getElementById('loader');
+            const loaderText = document.getElementById('loader-text');
+            loader.style.display = 'flex';
+
+            // Simulate Checks
+            loaderText.innerText = "Checking Channels...";
+            setTimeout(() => {
+                loaderText.innerText = "Checking Phone Model...";
+                setTimeout(() => {
+                    loaderText.innerText = "Checking IP Address...";
+                    setTimeout(() => {
+                         loaderText.innerText = "Checking VPN...";
+                         setTimeout(() => {
+                            loader.style.display = 'none';
+                            // Success Logic
+                            document.querySelector('.btn-verify').style.display = 'none';
+                            document.getElementById('openBtn').style.display = 'block';
+                            
+                            // Save joined status
+                            update(userRef, { joined: true });
+                            
+                            alert("✅ Verification Successful!");
+                         }, 1500);
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        }
+
+        window.goToHome = function() {
+            document.getElementById('start-page').style.display = 'none';
+            document.getElementById('home-page').style.display = 'block';
+        }
+
+        // 2. Navigation
+        window.showSection = function(sectionId) {
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('section-' + sectionId).classList.add('active');
+        }
+
+        window.closeSection = function() {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+            document.getElementById('home-page').style.display = 'block';
+        }
+
+        // 3. Update Balance UI
+        function updateUI() {
+            const bal = parseFloat(userData.balance).toFixed(4);
+            const bdt = (bal * 100).toFixed(2); // Assuming 1 USDT = 100 BDT approx for display
+
+            document.getElementById('main-balance-usdt').innerText = bal + " USDT";
+            document.getElementById('main-balance-bdt').innerText = bdt;
+            document.getElementById('acc-bal').innerText = bal;
+            document.getElementById('acc-ref').innerText = userData.referrals || 0;
+        }
+
+        // 4. Earn Logic (Ads)
+        window.watchAd = function(panelId) {
+            // Trigger Monetag SDK (Simulated call as SDK handles itself)
+            if (typeof show_10242818 === 'function') {
+                 show_10242818().then(() => {
+                     // Ad watched success
+                     rewardUser();
+                 }).catch(e => {
+                     // Fallback for simulation
+                     simulateAdWatch();
+                 });
+            } else {
+                simulateAdWatch();
+            }
+        }
+
+        function simulateAdWatch() {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+            document.getElementById('loader-text').innerText = "Watching Ad... Please wait 5s";
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
+                rewardUser();
+            }, 5000);
+        }
+
+        function rewardUser() {
+            const newBal = (parseFloat(userData.balance) + 0.001).toFixed(4);
+            update(userRef, {
+                balance: newBal,
+                adsWatched: (userData.adsWatched || 0) + 1
+            });
+            alert("💰 Ad Watched! 0.001 USDT added.");
+        }
+
+        // 5. Referral Copy
+        window.copyRef = function() {
+            const copyText = document.getElementById("ref-link");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Referral Link Copied!");
+        }
+
+        // 6. Withdraw Logic
+        window.processWithdraw = function() {
+            const amount = parseFloat(document.getElementById('withdraw-amount').value);
+            const method = document.getElementById('withdraw-method').value;
+            const wallet = document.getElementById('withdraw-wallet').value;
+
+            if (!wallet) {
+                alert("Please enter wallet number");
+                return;
+            }
+
+            if (amount < 0.2) {
+                // SMS as requested
+                alert("❌ আপনার Account পর্যপ্ত Balance নেই (Min 0.2 USDT)");
+                return;
+            }
+
+            if (amount > parseFloat(userData.balance)) {
+                alert("❌ আপনার Account পর্যপ্ত Balance নেই");
+                return;
+            }
+
+            // Deduct Balance
+            const newBal = (parseFloat(userData.balance) - amount).toFixed(4);
+            update(userRef, { balance: newBal });
+
+            // Add to History
+            const historyRef = ref(db, 'withdrawals/' + userTelegramId);
+            const newWithdraw = push(historyRef);
+            const date = new Date().toLocaleString();
+            
+            set(newWithdraw, {
+                date: date,
+                method: method,
+                wallet: wallet,
+                amount: amount,
+                status: "Pending"
+            });
+
+            // Simulate Auto Post Message (Frontend cannot post to telegram channel securely)
+            console.log(`Auto Post to @autopaymentproof: User ${userTelegramId} withdrew ${amount} USDT via ${method}`);
+            
+            alert("✅ Withdraw Request Sent!");
+            loadHistory(); // Reload history
+        }
+
+        // Load History
+        function loadHistory() {
+            const historyRef = ref(db, 'withdrawals/' + userTelegramId);
+            const tbody = document.querySelector('#withdraw-table tbody');
+            tbody.innerHTML = ""; // Clear
+
+            get(historyRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    Object.values(data).forEach(item => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${item.date.split(',')[0]}</td>
+                            <td>${item.wallet}</td>
+                            <td>${item.amount}</td>
+                            <td class="${item.status === 'Pending' ? 'status-pending' : 'status-completed'}">${item.status}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            });
+        }
+        
+        // Load history on start if in withdraw section
+        loadHistory();
+
+    </script>
+</body>
+</html>
